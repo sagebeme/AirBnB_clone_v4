@@ -1,29 +1,26 @@
 #!/usr/bin/python3
-"""model - flask app"""
+""" Starts a Flash Web Application C is FUN"""
 from flask import Flask
-
-
 app = Flask(__name__)
 
 
 @app.route('/', strict_slashes=False)
 def hello_hbnb():
-    """ empty function that returns the string hello hbnb"""
-    return "hello HBNB!"
+    """ Prints a Message when / is called """
+    return 'Hello HBNB!'
 
 
 @app.route('/hbnb', strict_slashes=False)
 def hbnb():
-    """an empty string that returns the string HBNB"""
-    return "HBNB"
+    """ Prints a Message when /hbnb is called """
+    return 'HBNB'
 
 
 @app.route('/c/<text>', strict_slashes=False)
-def display_c(text):
-    """a function to display text based on c"""
-    text = text.replace('_', ' ')
-    return 'C ' + '{}'.format(text)
+def c_is_fun(text):
+    """ Prints a Message when /c is called """
+    return "C " + text.replace('_', ' ')
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
+    """ Main Function """
     app.run(host='0.0.0.0', port=5000)

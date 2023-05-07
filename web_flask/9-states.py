@@ -1,48 +1,48 @@
 #!/usr/bin/python3
-""" Starts a Flask web application """
-
-from flask import Flask, render_template
+""" Starts a Flash Web Application """
 from models import storage
 from models.state import State
-# from models.city import City
-
-app = Flask(__name__)  # __name__ is the name of the module
-
-
-@app.route('/states', strict_slashes=False)
-def states():
-    """ Displays a HTML page with a list of states """
-    states = sorted(list(storage.all(State).values()),
-                    key=lambda state: state.name)
-    return render_template('9-states.html', states=states)
-
-
-@app.route('/states/<state_id>', strict_slashes=False)
-def states_id(state_id):
-    """ Displays a HTML page with a list of states """
-    states = sorted(list(storage.all(State).values()),
-                    key=lambda state: state.name)
-    state_found = False
-    for state in states:
-        if state.id == state_id:
-            state_found = True
-            return render_template(
-                '9-states.html',
-                states=states,
-                cities=state.cities,
-                id=state_id)
-    if not state_found:
-        return render_template(
-            '9-states.html',
-            states=states,
-            id=None)
+from os import environ
+from flask import Flask, render_template
+app = Flask(__name__)
+# app.jinja_env.trim_blocks = True
+# app.jinja_env.lstrip_blocks = True
 
 
 @app.teardown_appcontext
-def close_session(exception):
-    """ Closes the session after each request """
+def close_db(error):
+    """ Remove the current SQLAlchemy Session """
     storage.close()
 
 
-if __name__ == '__main__':
+@app.route('/states', strict_slashes=False)
+@app.route('/states/<id>', strict_slashes=False)
+def states_state(id=""):
+    """ displays a HTML page with a list of cities by states """
+    states = storage.all(State).values()
+    states = sorted(states, key=lambda k: k.name)
+    found = 0
+    state = ""
+    cities = []
+
+    for i in states:
+        if id == i.id:
+            state = i
+            found = 1
+            break
+    if found:
+        states = sorted(state.cities, key=lambda k: k.name)
+        state = state.name
+
+    if id and not found:
+        found = 2
+
+    return render_template('9-states.html',
+                           state=state,
+                           array=states,
+                           found=found)
+
+
+if __name__ == "__main__":
+    """ Main Function """
     app.run(host='0.0.0.0', port=5000)
