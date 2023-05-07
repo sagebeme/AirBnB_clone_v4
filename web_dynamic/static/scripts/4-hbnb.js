@@ -44,7 +44,7 @@ $('document').ready(function () {
   });
 });
 
-function appendPlaces(data) {
+function appendPlaces (data) {
   $('SECTION.places').empty();
   $('SECTION.places').append(data.map(place => {
     return `<ARTICLE>
@@ -77,4 +77,3 @@ function appendPlaces(data) {
               </ARTICLE>`;
   }));
 }
->>>>>>> fd2f38be33396c78b9fcc4e759680dd911dd7991
